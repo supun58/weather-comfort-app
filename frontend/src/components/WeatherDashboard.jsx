@@ -28,6 +28,8 @@ export function WeatherDashboard({ onLogout }){
   const [cities,setCities] = useState([])
   const [search,setSearch] = useState("")
 
+  const [sortBy,setSortBy] = useState("comfortScore")
+
   useEffect(()=>{
     fetchData()
   },[])
@@ -47,7 +49,7 @@ export function WeatherDashboard({ onLogout }){
     }
 
 
-const WeatherIcon = ({ response, size = "2x" }) => {
+const WeatherIcon = ({ response, size = "4x" }) => {
   const iconCode = response.icon;
   const description = response.description; 
   
@@ -56,14 +58,32 @@ const WeatherIcon = ({ response, size = "2x" }) => {
       src={`https://openweathermap.org/img/wn/${iconCode}@${size}.png`}
       alt={response.description}
       className="w-10 h-10"
-        title={description} // Show description on hover
+        title={description} 
     />
   );
 };
 
+  useEffect(()=>{
+    const sortedCities = [...cities].sort((a,b)=>{
+        if(sortBy === "comfortScore"){
+            return b.comfortScore - a.comfortScore
+        }
+        else if(sortBy === "cityName"){
+            return a.cityName.localeCompare(b.cityName)
+        }
+        return 0
+    })
+    setCities(sortedCities)
+    },[sortBy])
+
   const filtered = cities.filter(c =>
     c.cityName.toLowerCase().includes(search.toLowerCase())
   )
+
+  //rank cities based on comfortScore
+  const ranked = [...cities].sort((a,b)=>b.comfortScore - a.comfortScore)
+  console.log("Ranked cities:", ranked)
+    
 
   return (
 
@@ -77,11 +97,11 @@ const WeatherIcon = ({ response, size = "2x" }) => {
 
           <div className="flex items-center gap-3">
 
-            <Cloud className="text-blue-500"/>
+            <Cloud className="text-blue-500 text-4xl"/>
 
-            <h1 className="text-lg font-bold">
+            <p className="text-2xl font-bold">
               Weather Dashboard
-            </h1>
+            </p>
 
           </div>
 
@@ -121,20 +141,37 @@ const WeatherIcon = ({ response, size = "2x" }) => {
 
       <main className="container mx-auto px-4 py-8">
 
-        <div className="mb-6 relative">
-
-          <Search className="absolute left-3 top-3 w-4 h-4 text-gray-400"/>
-
-          <Input
-            placeholder="Search city..."
-            value={search}
-            onChange={(e)=>setSearch(e.target.value)}
-            className="pl-8"
-          />
-
+        <div className="mb-6 flex flex-col sm:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <Input
+              placeholder="Search cities..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10"
+            />
         </div>
 
-        {loading ?
+         <div className="flex gap-2">
+            <Button
+                variant={sortBy === "comfortScore" ? "default" : "outline"}
+                onClick={()=>setSortBy("comfortScore")}
+                className="flex-1 sm:flex-none text-white dark:text-white"
+              > 
+              By Comfort
+            </Button>
+
+            <Button
+                variant={sortBy === "cityName" ? "default" : "outline"}
+                onClick={()=>setSortBy("cityName")}
+                className="flex-1 sm:flex-none text-white dark:text-white"
+              > 
+                By Name
+            </Button>
+          </div> 
+        </div>
+
+        {loading ? (
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -151,7 +188,7 @@ const WeatherIcon = ({ response, size = "2x" }) => {
 
           </div>
 
-        :
+        ) : (
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -164,6 +201,13 @@ const WeatherIcon = ({ response, size = "2x" }) => {
                 <CardTitle>
                   {cityName.cityName}
                 </CardTitle>
+
+                <Badge
+                    variant="secondary"
+                    className="text-xs"
+                >
+                Rank #{ranked.findIndex(c=>c.cityName === cityName.cityName) + 1}
+                </Badge>
 
                 <WeatherIcon response={cityName}/>
                 <p>{cityName.description}   </p>
@@ -186,10 +230,10 @@ const WeatherIcon = ({ response, size = "2x" }) => {
                     Comfort Index
                   </p>
 
-                  <Progress value={cityName.comfort}/>
+                  <Progress value={cityName.comfortScore}/>
 
                   <Badge className="mt-2">
-                    {cityName.comfort}/100
+                    {cityName.comfortScore}/100
                   </Badge>
 
                 </div>
@@ -217,7 +261,7 @@ const WeatherIcon = ({ response, size = "2x" }) => {
 
         </div>
 
-        }
+        )}
 
       </main>
 
