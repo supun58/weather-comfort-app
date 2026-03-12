@@ -11,9 +11,6 @@ import { useTheme } from "next-themes"
 
 import {
   Cloud,
-  Sun,
-  CloudRain,
-  CloudSnow,
   Search,
   Moon,
   SunIcon,
@@ -35,47 +32,37 @@ export function WeatherDashboard({ onLogout }){
     fetchData()
   },[])
 
-  const fetchData = ()=>{
-
-    setLoading(true)
-
-    setTimeout(()=>{
-
-      setCities([
-        {city:"London",temp:15,humidity:72,wind:3.5,comfort:78,weather:"clouds"},
-        {city:"New York",temp:22,humidity:55,wind:2.1,comfort:85,weather:"clear"},
-        {city:"Tokyo",temp:18,humidity:85,wind:5.2,comfort:62,weather:"rain"},
-        {city:"Sydney",temp:24,humidity:60,wind:3.0,comfort:88,weather:"clear"},
-      ])
-
-      setLoading(false)
-
-    },1000)
-  }
-
-  const getIcon=(weather)=>{
-
-    switch(weather){
-
-      case "clear":
-        return <Sun className="text-yellow-500"/>
-
-      case "clouds":
-        return <Cloud/>
-
-      case "rain":
-        return <CloudRain/>
-
-      case "snow":
-        return <CloudSnow/>
-
-      default:
-        return <Cloud/>
+//get weather data from backend and set to cities state
+    const fetchData = async ()=>{
+        setLoading(true)
+        try {
+            const response = await fetch("http://localhost:5000/weather")
+            const data = await response.json()
+            setCities(data)
+            console.log("Fetched weather data:", data)
+        } catch (error) {
+            console.error("Error fetching weather data:", error)
+        }
+        setLoading(false)
     }
-  }
+
+
+const WeatherIcon = ({ response, size = "2x" }) => {
+  const iconCode = response.icon;
+  const description = response.description; 
+  
+  return (
+    <img 
+      src={`https://openweathermap.org/img/wn/${iconCode}@${size}.png`}
+      alt={response.description}
+      className="w-10 h-10"
+        title={description} // Show description on hover
+    />
+  );
+};
 
   const filtered = cities.filter(c =>
-    c.city.toLowerCase().includes(search.toLowerCase())
+    c.cityName.toLowerCase().includes(search.toLowerCase())
   )
 
   return (
@@ -92,7 +79,7 @@ export function WeatherDashboard({ onLogout }){
 
             <Cloud className="text-blue-500"/>
 
-            <h1 className="text-xl font-bold">
+            <h1 className="text-lg font-bold">
               Weather Dashboard
             </h1>
 
@@ -105,7 +92,7 @@ export function WeatherDashboard({ onLogout }){
               variant="outline"
               onClick={()=>setTheme(theme==="dark"?"light":"dark")}
             >
-              {theme==="dark"?<SunIcon/>:<Moon/>}
+            {theme === "dark" ? (<SunIcon />) : (<Moon style={{ color: 'white', fill: 'white' }} />)}           
             </Button>
 
             <Button
@@ -113,7 +100,7 @@ export function WeatherDashboard({ onLogout }){
               variant="outline"
               onClick={fetchData}
             >
-              <RefreshCw/>
+              <RefreshCw style={{ color: 'white' }}/>
             </Button>
 
             <Button
@@ -168,18 +155,19 @@ export function WeatherDashboard({ onLogout }){
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          {filtered.map((city,i)=>(
+          {filtered.map((cityName,i)=>(
 
             <Card key={i} className="hover:shadow-lg transition">
 
               <CardHeader className="flex flex-row justify-between items-center">
 
                 <CardTitle>
-                  {city.city}
+                  {cityName.cityName}
                 </CardTitle>
 
-                {getIcon(city.weather)}
-
+                <WeatherIcon response={cityName}/>
+                <p>{cityName.description}   </p>
+   
               </CardHeader>
 
               <CardContent className="space-y-4">
@@ -187,8 +175,8 @@ export function WeatherDashboard({ onLogout }){
                 <div className="text-center">
 
                   <p className="text-4xl font-bold">
-                    {city.temp}°C
-                  </p>
+                    {(cityName.temperature - 273.15).toFixed(1)}°C                  
+                </p>
 
                 </div>
 
@@ -198,24 +186,25 @@ export function WeatherDashboard({ onLogout }){
                     Comfort Index
                   </p>
 
-                  <Progress value={city.comfort}/>
+                  <Progress value={cityName.comfort}/>
 
                   <Badge className="mt-2">
-                    {city.comfort}/100
+                    {cityName.comfort}/100
                   </Badge>
 
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 text-sm">
 
-                  <div className="flex gap-2 items-center">
-                    <Droplets size={16}/>
-                    {city.humidity}%
+                  <div className="flex gap-2 items-center" title="Humidity">
+                    <Droplets size={16} title="Humidity"/>
+                    {cityName.humidity}% <p className="ml-1 text-gray-400">- Humidity</p>
                   </div>
 
-                  <div className="flex gap-2 items-center">
-                    <Wind size={16}/>
-                    {city.wind} m/s
+
+                  <div className="flex gap-2 items-right " title="Wind Speed">
+                    <Wind size={16} title="Wind Speed"/>
+                    {cityName.windSpeed} m/s <p className="ml-1 text-gray-400">- Wind Speed</p>
                   </div>
 
                 </div>
