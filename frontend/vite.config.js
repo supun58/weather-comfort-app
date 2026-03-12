@@ -5,5 +5,6 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 
 export default defineConfig({
+  darkMode: "class",
   plugins: [react(),tsconfigPaths(), tailwindcss()],
 })

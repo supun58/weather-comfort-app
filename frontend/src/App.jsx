@@ -2,24 +2,34 @@ import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import { LoginPage } from "./components/LoginPage"
+import { WeatherDashboard } from "./components/WeatherDashboard"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [user, setUser] = useState(null)
+  const [error, setError] = useState("")
 
-  //test backend via /weather endpoint
-  useEffect(()=> {
-    fetch("http://localhost:5000/weather")
-    .then(res => res.text())
-    .then(data => console.log(data))
-  })
+  const handleLogin = (email, password) => {
+    if (email === "careers@fidenz.com" && password === "Pass#fidenz") {
+      setUser(email)
+      setError("")
+    } else {
+      setError("Invalid credentials")
+    }
+  }
 
-  return (
-    <div className="h-screen flex items-center justify-center bg-gray-100">
-      <h1 className="text-4xl font-bold text-blue-600">
-        Tailwind Working
-      </h1>
-    </div>
-  );
+  const handleLogout = () => {
+    setUser(null)
+  }
+
+  if (!user) {
+    return <LoginPage onLogin={handleLogin} error={error} />
+  }
+
+  return <WeatherDashboard onLogout={handleLogout} />
 }
 
 export default App
+
+
+
