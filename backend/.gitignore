@@ -10,6 +10,7 @@ lerna-debug.log*
 .env
 .env.local
 .env.production
+.env
 
 # Build outputs
 dist/

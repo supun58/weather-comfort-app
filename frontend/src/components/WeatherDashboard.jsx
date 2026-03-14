@@ -9,6 +9,9 @@ import { Progress } from "@/components/ui/progress"
 
 import { useTheme } from "next-themes"
 
+import { useAuth0 } from "@auth0/auth0-react"
+
+
 import {
   Cloud,
   Search,
@@ -20,7 +23,9 @@ import {
   Droplets
 } from "lucide-react"
 
-export function WeatherDashboard({ onLogout }){
+export function WeatherDashboard(){
+
+  const { logout } = useAuth0()
 
   const {theme,setTheme} = useTheme()
 
@@ -63,18 +68,20 @@ const WeatherIcon = ({ response, size = "4x" }) => {
   );
 };
 
-  useEffect(()=>{
-    const sortedCities = [...cities].sort((a,b)=>{
-        if(sortBy === "comfortScore"){
-            return b.comfortScore - a.comfortScore
-        }
-        else if(sortBy === "cityName"){
-            return a.cityName.localeCompare(b.cityName)
-        }
-        return 0
-    })
-    setCities(sortedCities)
-    },[sortBy])
+useEffect(() => {
+  if (!cities || cities.length === 0) return;
+  
+  const sortedCities = [...cities].sort((a, b) => {
+    if (sortBy === "comfortScore") {
+      return b.comfortScore - a.comfortScore;
+    } else if (sortBy === "cityName") {
+      return a.cityName.localeCompare(b.cityName);
+    }
+    return 0;
+  });
+  
+  setCities(sortedCities);
+}, [sortBy, cities]); 
 
   const filtered = cities.filter(c =>
     c.cityName.toLowerCase().includes(search.toLowerCase())
@@ -123,13 +130,21 @@ const WeatherIcon = ({ response, size = "4x" }) => {
               <RefreshCw style={{ color: 'white' }}/>
             </Button>
 
-            <Button
-              variant="destructive"
-              onClick={onLogout}
-            >
-              <LogOut className="w-4 h-4 mr-2"/>
-              Logout
-            </Button>
+
+
+                <Button
+      variant="destructive"
+      onClick={() =>
+        logout({
+          logoutParams: {
+            returnTo: window.location.origin
+          }
+        })
+      }
+    >
+        <LogOut style={{ color: 'red' }}/>
+      Logout
+    </Button>
 
           </div>
 

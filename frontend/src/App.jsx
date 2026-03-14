@@ -1,35 +1,29 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { LoginPage } from "./components/LoginPage"
 import { WeatherDashboard } from "./components/WeatherDashboard"
+import { useAuth0 } from "@auth0/auth0-react"
 
-function App() {
-  const [user, setUser] = useState(null)
-  const [error, setError] = useState("")
+import { VerifyOTP } from "./components/EmailVerification"
 
-  const handleLogin = (email, password) => {
-    if (email === "careers@fidenz.com" && password === "Pass#fidenz") {
-      setUser(email)
-      setError("")
-    } else {
-      setError("Invalid credentials")
-    }
+
+export default function App(){
+
+  const { isAuthenticated, isLoading } = useAuth0()
+
+  if(isLoading){
+    return <div className="text-center py-10">Loading...</div>
   }
 
-  const handleLogout = () => {
-    setUser(null)
+  if(!isAuthenticated && window.location.pathname !== "/verify-otp"){
+    return <LoginPage/>
   }
 
-  if (!user) {
-    return <LoginPage onLogin={handleLogin} error={error} />
+  if(window.location.pathname === "/verify-otp"){
+    return <VerifyOTP/>
   }
 
-  return <WeatherDashboard onLogout={handleLogout} />
+  return <WeatherDashboard/>
+
 }
-
-export default App
-
-
 
