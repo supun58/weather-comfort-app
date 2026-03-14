@@ -4,9 +4,6 @@ import { LoginPage } from "./components/LoginPage"
 import { WeatherDashboard } from "./components/WeatherDashboard"
 import { useAuth0 } from "@auth0/auth0-react"
 
-import { VerifyOTP } from "./components/EmailVerification"
-
-
 export default function App(){
 
   const { isAuthenticated, isLoading } = useAuth0()
@@ -19,9 +16,9 @@ export default function App(){
     return <LoginPage/>
   }
 
-  if(window.location.pathname === "/verify-otp"){
-    return <VerifyOTP/>
-  }
+  // if(window.location.pathname === "/verify-otp"){
+  //   return <VerifyOTP/>
+  // }
 
   return <WeatherDashboard/>
 

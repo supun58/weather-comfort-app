@@ -27,6 +27,9 @@ This helped to understand how backend processing, caching strategies, and authen
 # Weather Data
 -OpenWeather API
 
+# Testing
+Unit tests were implemented using Jest to validate the Comfort Index calculation logic under different weather conditions such as high humidity, extreme temperature, and normal conditions.
+
 
 ## Setup Instructions
 
