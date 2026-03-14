@@ -71,18 +71,18 @@ app.get("/debug", (req, res) => {
 );
 
 
-//verify otp
-app.post("/verify-otp", async (req,res)=>{
+// //verify otp
+// app.post("/verify-otp", async (req,res)=>{
 
-  const {code} = req.body
-  const storedOTP = "123456"
+//   const {code} = req.body
+//   const storedOTP = "123456"
 
-  if(code == storedOTP){
-    res.status(200).send("verified")
-  }else{
-    res.status(401).send("invalid")
-  }
-})
+//   if(code == storedOTP){
+//     res.status(200).send("verified")
+//   }else{
+//     res.status(401).send("invalid")
+//   }
+// })
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

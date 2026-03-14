@@ -75,7 +75,7 @@ The login flow is:
 User Login → Auth0 Authentication → Dashboard Access
 Public signups are disabled and only whitelisted users can log into the system.
 
-# Test user provided for the assignment:
+# Test user :
 -Email: careers@fidenz.com
 -Password: Pass#fidenz
 
@@ -149,7 +149,9 @@ Wind helps regulate temperature perception by providing cooling effects. However
 -Cloud Coverage – Weight 10%
 Cloud coverage affects sunlight intensity and temperature perception. While it contributes to comfort, it is less influential than the other factors. Therefore it received the lowest weight.
 
-## Trade-offs Considered
+
+
+### Trade-offs Considered
 During development, several trade-offs were considered.
 
 # Simplicity vs Accuracy
@@ -172,7 +174,9 @@ However using Auth0 provides:
 -faster implementation
 -industry-standard authentication flow
 
-## Cache Design Explanation
+
+
+### Cache Design Explanation
 The backend implements a 5-minute cache for weather data. When the /weather endpoint is called:
 
 If cache exists AND not expired → return cached data
@@ -203,7 +207,9 @@ The dashboard UI includes:
 -comfort score visualization
 -The interface was built using Tailwind CSS and shadcn/ui components to create a clean and modern design.
 
-## Known Limitations
+
+
+### Limitations
 
 Although the system works as expected, there are some limitations.
 
@@ -222,7 +228,7 @@ could improve the accuracy of the score.
 # External API Dependency
 The application depends on the OpenWeather API. If the API is unavailable, weather data cannot be fetched.
 
-## MFA Implementation Note
+### MFA Implementation Note
 One of the assignment requirements was to implement Multi-Factor Authentication (MFA) using email verification codes.
 While configuring authentication using Auth0, I initially enabled Email + Authenticator App MFA. During testing I observed that when both factors are enabled, Auth0 prioritizes the Authenticator App OTP, and the system consistently prompts for authenticator based codes instead of sending verification codes via email.
 I also explored implementing a custom email OTP verification using Auth0 Actions (Post-Login triggers). Although this approach is technically possible, it requires integrating an external email service (such as SMTP or an email API), which introduces additional infrastructure outside the scope of this assignment.
@@ -236,5 +242,5 @@ Therefore, the current implementation includes:
 Although email-based OTP MFA was not fully implemented due to this limitation, the system still demonstrates a secure authentication flow and proper access control. Email-based OTP MFA could be added in the future using Auth0 Actions combined with an email delivery service.
 
 
-## Personal Reflection
+### Personal Reflection
 Working on this assignment was a valuable learning experience for me. It gave me the opportunity to practice full-stack development, API integration, caching strategies, and authentication systems in a single project. At the beginning, integrating authentication and caching seemed challenging, but gradually implementing each component helped me understand how real-world applications are structured. I really enjoyed building the dashboard UI and seeing the weather data transform into a meaningful Comfort Index score. This project helped me strengthen both my backend thinking and frontend design skills, and I hope it reflects my enthusiasm for software engineering.
