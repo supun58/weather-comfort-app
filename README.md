@@ -1,4 +1,4 @@
-### Weather Comfort Index Dashboard
+# Weather Comfort Index Dashboard
 
 A full-stack web application that collects weather data from 10 multiple cities from cities.json and calculates a Comfort Index to estimate how comfortable the weather conditions are for humans.The system fetches weather data from the OpenWeather API, processes it in the backend, and displays a mobile-responsive dashboard where users can view weather conditions and comfort scores for different cities.
 
@@ -9,61 +9,61 @@ The application also includes authentication, caching, and a debug endpoint to d
 The goal of this project is not just to display weather data, but to transform raw weather information into a meaningful metric called the Comfort Index. Weather factors such as temperature, humidity, wind speed, and cloud coverage affect how comfortable a person feels outdoors. Therefore, the backend processes these variables and calculates a score between 0 and 100, where higher values indicate more comfortable weather.
 This helped to understand how backend processing, caching strategies, and authentication systems work together in a real full-stack application.
 
-# Tech Stack
+### Tech Stack
 -Frontend
 -React
 -Vite
 -Tailwind CSS
 -shadcn/ui
 
-# Backend
+### Backend
 -Node.js
 -Express.js
 -Axios
 
-# Authentication
+### Authentication
 -Auth0
 
-# Weather Data
+### Weather Data
 -OpenWeather API
 
-# Testing
+### Testing
 Unit tests were implemented using Jest to validate the Comfort Index calculation logic under different weather conditions such as high humidity, extreme temperature, and normal conditions.
 
 
 ## Setup Instructions
 
-# Clone the Repository
+### Clone the Repository
 -git clone https://github.com/supun58/weather-comfort-app.git
 -cd weather-comfort-app
 
-# Backend Setup
+### Backend Setup
 Navigate to the backend folder:
 
 -cd backend
 -npm install
 
-# Create a .env file:
+### Create a .env file:
 -OPENWEATHER_API_KEY=your_api_key
 -PORT=5000
 
-# Start the backend server:
+### Start the backend server:
 -npm run dev
 
 Backend will run on:
 -http://localhost:5000
 
-# Frontend Setup
+### Frontend Setup
 Navigate to the frontend folder:
 
 -cd frontend
 -npm install
 
-# Create a .env file:
+### Create a .env file:
 -VITE_AUTH0_DOMAIN=your_auth0_domain
 -VITE_AUTH0_CLIENT_ID=your_client_id
 
-# Run the development server:
+### Run the development server:
 -npm run dev
 
 Frontend will run on:
@@ -75,7 +75,7 @@ The login flow is:
 User Login → Auth0 Authentication → Dashboard Access
 Public signups are disabled and only whitelisted users can log into the system.
 
-# Test user :
+### Test user :
 -Email: careers@fidenz.com
 -Password: Pass#fidenz
 
@@ -83,7 +83,7 @@ This ensures controlled access to the application.
 
 
 
-### Comfort Index Formula
+# Comfort Index Formula
 The Comfort Index is calculated using four weather variables: Temperature, Humidity, Wind Speed, Cloud Coverage.
 Each factor affects how comfortable people feel outdoors.
 
@@ -151,13 +151,13 @@ Cloud coverage affects sunlight intensity and temperature perception. While it c
 
 
 
-### Trade-offs Considered
+# Trade-offs Considered
 During development, several trade-offs were considered.
 
-# Simplicity vs Accuracy
+### Simplicity vs Accuracy
 A very complex model could have been used (for example machine learning models). However the goal of this assignment is clarity and explainability. Therefore a simple weighted formula was chosen so that the logic is easy to understand and justify.
 
-# Real-time Data vs Performance
+### Real-time Data vs Performance
 Fetching weather data from the API every request would ensure real-time accuracy.
 
 However it would also:
@@ -166,7 +166,7 @@ However it would also:
 
 Therefore caching was introduced to improve performance.
 
-# Custom Authentication vs External Authentication
+### Custom Authentication vs External Authentication
 Authentication could have been implemented manually using JWT and user databases.
 
 However using Auth0 provides:
@@ -176,7 +176,7 @@ However using Auth0 provides:
 
 
 
-### Cache Design Explanation
+# Cache Design Explanation
 The backend implements a 5-minute cache for weather data. When the /weather endpoint is called:
 
 If cache exists AND not expired → return cached data
@@ -184,12 +184,12 @@ Else → fetch new data from OpenWeather API
 
 -Cache duration: 5 minutes
 
-# Benefits:
+### Benefits:
 -reduces API calls
 -improves response speed
 -prevents unnecessary network requests
 
-# The system also includes a debug endpoint: /debug
+### The system also includes a debug endpoint: /debug
 
 This endpoint returns:
 -Cache Status: HIT or MISS
@@ -209,14 +209,14 @@ The dashboard UI includes:
 
 
 
-### Limitations
+# Limitations
 
 Although the system works as expected, there are some limitations.
 
-# Limited Cities
+### Limited Cities
 -Currently the system uses a fixed list of cities defined in the backend (with newly added two cities). Future versions could allow dynamic city search.
 
-# Simplified Comfort Model
+### Simplified Comfort Model
 -The Comfort Index formula is a simplified model.
 
 Other environmental factors such as:
@@ -225,10 +225,10 @@ Other environmental factors such as:
 -pollution
 could improve the accuracy of the score.
 
-# External API Dependency
+### External API Dependency
 The application depends on the OpenWeather API. If the API is unavailable, weather data cannot be fetched.
 
-### MFA Implementation Note
+# MFA Implementation Note
 One of the assignment requirements was to implement Multi-Factor Authentication (MFA) using email verification codes.
 While configuring authentication using Auth0, I initially enabled Email + Authenticator App MFA. During testing I observed that when both factors are enabled, Auth0 prioritizes the Authenticator App OTP, and the system consistently prompts for authenticator based codes instead of sending verification codes via email.
 I also explored implementing a custom email OTP verification using Auth0 Actions (Post-Login triggers). Although this approach is technically possible, it requires integrating an external email service (such as SMTP or an email API), which introduces additional infrastructure outside the scope of this assignment.
@@ -242,5 +242,5 @@ Therefore, the current implementation includes:
 Although email-based OTP MFA was not fully implemented due to this limitation, the system still demonstrates a secure authentication flow and proper access control. Email-based OTP MFA could be added in the future using Auth0 Actions combined with an email delivery service.
 
 
-### Personal Reflection
+# Personal Reflection
 Working on this assignment was a valuable learning experience for me. It gave me the opportunity to practice full-stack development, API integration, caching strategies, and authentication systems in a single project. At the beginning, integrating authentication and caching seemed challenging, but gradually implementing each component helped me understand how real-world applications are structured. I really enjoyed building the dashboard UI and seeing the weather data transform into a meaningful Comfort Index score. This project helped me strengthen both my backend thinking and frontend design skills, and I hope it reflects my enthusiasm for software engineering.
